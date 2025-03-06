@@ -1,7 +1,9 @@
+import os
 import boto3
 
 class AWSHandler:
     """AWSの各種サービスを操作するためのハンドラクラス"""
+
     def __init__(self, region_name="ap-northeast-1"):
         self.s3_client = boto3.client('s3', region_name=region_name)
 
@@ -22,20 +24,25 @@ class AWSHandler:
             objects = [obj['Key'] for obj in response['Contents']]
         return objects
 
+    def download_s3_objects(self, bucket_name, prefix, local_dir):
+        """指定したS3プレフィックス内のすべてのオブジェクトをローカルにダウンロードする"""
+        os.makedirs(local_dir, exist_ok=True)
+        objects = self.list_s3_objects(bucket_name, prefix)
+        for obj_key in objects:
+            relative_path = obj_key[len(prefix):]  # プレフィックスを取り除いた相対パス
+            local_path = os.path.join(local_dir, relative_path)
+            # ディレクトリが存在しない場合は作成
+            os.makedirs(os.path.dirname(local_path), exist_ok=True)
+            print(f"Downloading {obj_key} to {local_path} ...")
+            self.s3_client.download_file(bucket_name, obj_key, local_path)
+        print("Download complete.")
+
 # 使用例
 if __name__ == "__main__":
-    # AWSHandler インスタンス作成
     aws_handler = AWSHandler()
-    # バケット名と対象フォルダ（プレフィックス）を指定
     bucket_name = "minelab-iot-storage"
     prefix = "projects/csi/image-data/"
-    # フォルダ（ディレクトリ）一覧を取得
-    directories = aws_handler.list_s3_directories(bucket_name, prefix)
-    print("S3ディレクトリ一覧:")
-    for directory in directories:
-        print(directory)
-    # ファイル一覧を取得
-    files = aws_handler.list_s3_objects(bucket_name, prefix)
-    print("\nS3ファイル一覧:")
-    for file in files:
-        print(file)
+    local_download_path = "../data"
+
+    # S3オブジェクトをローカルにダウンロード
+    aws_handler.download_s3_objects(bucket_name, prefix, local_download_path)

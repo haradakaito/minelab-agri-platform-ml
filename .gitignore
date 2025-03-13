@@ -10,4 +10,8 @@
 
 **/pycache/**
 
+**/tmp/**
+
+**/documents/**
+
 memo.txt

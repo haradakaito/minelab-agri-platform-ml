@@ -3,7 +3,7 @@ from lib import AWSHandler, ErrorHandler, Util
 if __name__ == '__main__':
     try:
         # AWSハンドラを初期化
-        aws_handler = AWSHandler()
+        aws_handler = AWSHandler(region_name='ap-northeast-1', bucket_name='minelab-iot-storage')
 
     except Exception as e:
         # エラーハンドラを初期化

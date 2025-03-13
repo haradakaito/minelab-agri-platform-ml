@@ -103,7 +103,7 @@ class AWSHandler:
                 timestamp_str = filename.split('.')[0]                                # タイムスタンプ部分
                 file_dt       = datetime.strptime(timestamp_str, "%Y-%m-%dT%H-%M-%S") # ファイルの日時
             except Exception as e:
-                print(f"Skipping invalid file: {s3_key} - Error: {e}")
+                print(f"エラー: {s3_key} -> {e}")
                 continue
 
             # 指定した時間範囲内のファイルのみ処理

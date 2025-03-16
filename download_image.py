@@ -13,8 +13,8 @@ if __name__ == '__main__':
         aws_handler.download_s3_objects_within_time_range(
             base_prefix    = 'projects/csi/image-data/',                # プレフィックス
             local_base_dir = f'{Util.get_root_dir()}/data/image-data/', # ローカルディレクトリ
-            start_time     = "2025-03-12T00-00-00",                                # 開始時間
-            end_time       = "2025-03-13T00-00-00"                                   # 終了時間
+            start_time     = start_time,                                # 開始時間
+            end_time       = end_time                                   # 終了時間
         )
 
     except Exception as e:

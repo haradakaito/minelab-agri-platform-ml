@@ -63,14 +63,16 @@ if __name__ == '__main__':
         month     = timestamp.split('T')[0].split('-')[1] # 月
         day       = timestamp.split('T')[0].split('-')[2] # 日
 
-        # ファイル名のリストを取得
         # MEMO: ネストが深いのでリファクタリングが必要
         pcap_root_path  = f"{Util.get_root_dir()}/data/pcap-data"
         basic_time_path = f"year={year}/month={month}/day={day}"
+
         for dirname in Util.get_dir_list(path=pcap_root_path):
             try:
                 for hour in Util.get_dir_list(path=f"{pcap_root_path}/{dirname}/{basic_time_path}"):
                     for minute in Util.get_dir_list(path=f"{pcap_root_path}/{dirname}/{basic_time_path}/{hour}"):
+
+                        # デコード対象のPCAPファイルを取得
                         for filename in Util.get_file_name_list(path=f"{pcap_root_path}/{dirname}/{basic_time_path}/{hour}/{minute}", ext='.pcap'):
                             # PCAPファイルをCSVファイルに変換
                             decode_pcap2csv(

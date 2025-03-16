@@ -114,7 +114,7 @@ class AWSHandler:
                 os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
                 # ダウンロード
                 self.s3_client.download_file(self.s3_bucket_name, s3_key, local_file_path)
-                print(f"Downloaded: {s3_key} -> {local_file_path}")
+                # print(f"Downloaded: {s3_key} -> {local_file_path}")
 
 # 使用例
 if __name__ == "__main__":

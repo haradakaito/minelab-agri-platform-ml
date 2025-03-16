@@ -3,7 +3,7 @@ import sys
 import netifaces
 import socket
 import base64
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 class Util:
@@ -36,11 +36,13 @@ class Util:
             raise e
 
     @staticmethod
-    def get_timestamp() -> str:
+    def get_timestamp(delta_hour: int = 0) -> str:
         """タイムスタンプを取得する関数"""
         # 「YYYY-MM-DDThh-mm-ss」形式で取得
         try:
-            timestamp = datetime.now().strftime('%Y-%m-%dT%H-%M-%S')
+            timestamp = datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
+            if delta_hour != 0:
+                timestamp = (datetime.now() + timedelta(hours=delta_hour)).strftime("%Y-%m-%dT%H-%M-%S")
             return timestamp
         except Exception as e:
             raise e

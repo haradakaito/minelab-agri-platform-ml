@@ -55,8 +55,8 @@ class AWSHandler:
     def _validation_time_range(self, start_time: str, end_time: str) -> bool:
         """指定した時間範囲のバリデーションを行い，問題がなければ True を返す"""
         try:
-            start_dt = parser.parse(start_time)
-            end_dt   = parser.parse(end_time)
+            start_dt = datetime.strptime(start_time, "%Y-%m-%dT%H-%M-%S")
+            end_dt   = datetime.strptime(end_time,   "%Y-%m-%dT%H-%M-%S")
             return all([
                 start_dt <= end_dt,
                 0 <= start_dt.year   <= 9999, 0 <= end_dt.year   <= 9999, # 年は0以上9999以下
@@ -81,9 +81,9 @@ class AWSHandler:
         local_base_dir: str
             ダウンロード先のローカルディレクトリパス
         start_time: str
-            ダウンロード開始時間（ISO 8601形式）
+            ダウンロード開始時間
         end_time: str
-            ダウンロード終了時間（ISO 8601形式）
+            ダウンロード終了時間
 
         return
         ------
@@ -107,7 +107,7 @@ class AWSHandler:
                 continue
 
             # 指定した時間範囲内のファイルのみ処理
-            if parser.parse(start_time) <= file_dt <= parser.parse(end_time):
+            if datetime.strptime(start_time, "%Y-%m-%dT%H-%M-%S") <= file_dt <= datetime.strptime(end_time, "%Y-%m-%dT%H-%M-%S"):
                 relative_path   = s3_key[len(base_prefix):]                   # プレフィックスを除いた相対パス
                 local_file_path = os.path.join(local_base_dir, relative_path) # ローカルファイルパス
                 # 必要なディレクトリを作成
@@ -124,6 +124,6 @@ if __name__ == "__main__":
     aws_handler.download_s3_objects_within_time_range(
         base_prefix    = "projects/csi/image-data/",
         local_base_dir = "/home/csi/minelab-agri-platform-ml/__dev__/harada/data/image-data/",
-        start_time     = "2025-03-12T00:00:00",
-        end_time       = "2025-03-13T00:00:00"
+        start_time     = "2025-03-12T00-00-00",
+        end_time       = "2025-03-13T00-00-00"
     )

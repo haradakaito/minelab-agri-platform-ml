@@ -97,6 +97,7 @@ class Util:
         except Exception as e:
             raise e
 
+    @staticmethod
     def get_alphabet_list(num: int) -> list:
         """アルファベットリストを取得する関数"""
         try:
@@ -108,6 +109,19 @@ class Util:
                 else:
                     alphabet_list.append(alphabet[i//26-1] + alphabet[i%26])
             return alphabet_list
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def get_common_files(*path) -> list:
+        try:
+            common_files = []
+            for i, p in enumerate(path):
+                if i == 0:
+                    common_files = set(Util.get_file_name_list(p, ""))
+                else:
+                    common_files = common_files & set(Util.get_file_name_list(p, ""))
+            return sorted(list(common_files))
         except Exception as e:
             raise e
 
@@ -142,5 +156,10 @@ if __name__ == "__main__":
         print("FileName(No Ext): ", Util.remove_extension(file_name="sample.csv"))
         # アルファベットリストを取得
         print("Alphabet List: ", Util.get_alphabet_list(50))
+        # 共通ファイルを取得
+        print("Common Files: ", Util.get_common_files(
+            "/home/pi/minelab-agri-platform/minelab-iot-gateway/pcap/minelab-iot-nexmon-1",
+            "/home/pi/minelab-agri-platform/minelab-iot-gateway/pcap/minelab-iot-nexmon-2"
+        ))
     except Exception as e:
         print(e)

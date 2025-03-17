@@ -16,10 +16,8 @@ if __name__ == '__main__':
             aws_handler.download_s3_objects(
                 remote_path = f'projects/csi/pcap-data/{field_device}/',               # S3のプレフィックス
                 local_path  = f'{Util.get_root_dir()}/data/pcap-data/{field_device}/', # ローカルパス
-                # start_time  = Util.get_timestamp(delta_hour=-24),                      # 開始時間
-                # end_time    = Util.get_timestamp()                                     # 終了時間
-                start_time  = "2025-03-12T00-00-00",
-                end_time    = "2025-03-13T00-00-00"
+                start_time  = Util.get_timestamp(delta_hour=-24),                      # 開始時間
+                end_time    = Util.get_timestamp()                                     # 終了時間
             )
 
     except Exception as e:

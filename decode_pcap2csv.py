@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from lib import Util, ErrorHandler
 
-def decode_pcap2csv(decoder, pcap_path: str, save_path: str, filename: str) -> None:
+def decode_pcap2csv(decoder, pcap_path: str, csv_path: str, filename: str) -> None:
     """
     PCAPファイルをCSVファイルに変換する関数
 
@@ -14,7 +14,7 @@ def decode_pcap2csv(decoder, pcap_path: str, save_path: str, filename: str) -> N
         デコーダークラス
     pcap_path: str
         PCAPファイルのパス
-    save_path: str
+    csv_path: str
         保存先のパス
     filename: str
         ファイル名
@@ -41,10 +41,10 @@ def decode_pcap2csv(decoder, pcap_path: str, save_path: str, filename: str) -> N
         df_pha.columns = ['Time'] + Util.get_alphabet_list(num=df_pha.shape[1]-1)
 
         # CSVファイルに保存
-        Util.create_path(f"{save_path}/amp") # ディレクトリが存在しない場合は作成
-        Util.create_path(f"{save_path}/pha") # ディレクトリが存在しない場合は作成
-        df_amp.to_csv(f"{save_path}/amp/{filename.replace('.pcap', '.csv')}")
-        df_pha.to_csv(f"{save_path}/pha/{filename.replace('.pcap', '.csv')}")
+        Util.create_path(f"{csv_path}/amp")
+        Util.create_path(f"{csv_path}/pha")
+        df_amp.to_csv(f"{csv_path}/amp/{Util.remove_extension(file_name=filename)}.csv")
+        df_pha.to_csv(f"{csv_path}/pha/{Util.remove_extension(file_name=filename)}.csv")
 
     except Exception as e:
         # エラーハンドラを初期化
@@ -54,39 +54,19 @@ def decode_pcap2csv(decoder, pcap_path: str, save_path: str, filename: str) -> N
 if __name__ == '__main__':
     try:
         # 設定ファイルの読み込み
-        with open('config/config.json', 'r') as file:
-            config = json.load(file)
+        with open(f'{Util.get_root_dir()}/config/config.json', 'r') as f:
+            config = json.load(f)
 
-        # デコード対象のパスを取得
-        timestamp = Util.get_timestamp(delta_hour=-24)    # 24時間前のタイムスタンプを取得
-        year      = timestamp.split('T')[0].split('-')[0] # 年
-        month     = timestamp.split('T')[0].split('-')[1] # 月
-        day       = timestamp.split('T')[0].split('-')[2] # 日
-
-        # MEMO: ネストが深いのでリファクタリングが必要
-        pcap_root_path  = f"{Util.get_root_dir()}/data/pcap-data"
-        basic_time_path = f"year={year}/month={month}/day={day}"
-
-        for dirname in Util.get_dir_list(path=pcap_root_path):
-            try:
-                for hour in Util.get_dir_list(path=f"{pcap_root_path}/{dirname}/{basic_time_path}"):
-                    for minute in Util.get_dir_list(path=f"{pcap_root_path}/{dirname}/{basic_time_path}/{hour}"):
-
-                        # デコード対象のPCAPファイルを取得
-                        for filename in Util.get_file_name_list(path=f"{pcap_root_path}/{dirname}/{basic_time_path}/{hour}/{minute}", ext='.pcap'):
-                            # PCAPファイルをCSVファイルに変換
-                            decode_pcap2csv(
-                                decoder   = importlib.import_module(f"lib.interleaved"),
-                                pcap_path = f"{pcap_root_path}/{dirname}/{basic_time_path}/{hour}/{minute}",
-                                save_path = f"{Util.get_root_dir()}/data/csv-data/{dirname}/{basic_time_path}/{hour}/{minute}",
-                                filename  = filename
-                            )
-
-            except Exception as e:
-                # エラーハンドラを初期化
-                handler = ErrorHandler(log_file=f'{Util.get_root_dir()}/log/{Util.get_exec_file_name()}.log')
-                handler.log_error(e)
-                continue
+        # PCAPファイルのデコード
+        for field_device in config["FieldDevice"]["Pcap"]:
+            for filename in Util.get_file_name_list(path=f"{Util.get_root_dir()}/data/pcap-data/{field_device}", ext='.pcap'):
+                # PCAPファイルをCSVファイルに変換
+                decode_pcap2csv(
+                    decoder   = importlib.import_module(f"lib.interleaved"),
+                    pcap_path = f"{Util.get_root_dir()}/data/pcap-data/{field_device}",
+                    csv_path  = f"{Util.get_root_dir()}/data/csv-data/{field_device}",
+                    filename  = filename
+                )
 
     except Exception as e:
         # エラーハンドラを初期化

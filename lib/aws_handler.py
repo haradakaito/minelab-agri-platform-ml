@@ -83,7 +83,6 @@ class AWSHandler:
                 timestamp    = dt.strptime(filename_ext.split('.')[0], timestamp_format) # ファイル名（タイムスタンプ）を取得
 
                 # 指定した時間範囲内のファイルのみダウンロード（ローカルパスに保存）
-                print(object['Key'])
                 if dt.strptime(start_time, timestamp_format) <= timestamp <= dt.strptime(end_time, timestamp_format):
                     self.s3_client.download_file(self.s3_bucket_name, object['Key'], f"{local_path}{filename_ext}")
         except Exception as e:

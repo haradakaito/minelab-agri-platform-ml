@@ -113,14 +113,14 @@ class Util:
             raise e
 
     @staticmethod
-    def get_common_files(*path) -> list:
+    def get_common_files(path_list:list) -> list:
         try:
             common_files = []
-            for i, p in enumerate(path):
+            for i in range(len(path_list)):
                 if i == 0:
-                    common_files = set(Util.get_file_name_list(p, ""))
+                    common_files = set(Util.get_file_name_list(path_list[i], ""))
                 else:
-                    common_files = common_files & set(Util.get_file_name_list(p, ""))
+                    common_files = common_files & set(Util.get_file_name_list(path_list[i], ""))
             return sorted(list(common_files))
         except Exception as e:
             raise e

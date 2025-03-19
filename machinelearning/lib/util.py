@@ -3,7 +3,7 @@ import sys
 import netifaces
 import socket
 import base64
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 class Util:
@@ -36,11 +36,13 @@ class Util:
             raise e
 
     @staticmethod
-    def get_timestamp() -> str:
+    def get_timestamp(delta_hour: int = 0) -> str:
         """タイムスタンプを取得する関数"""
         # 「YYYY-MM-DDThh-mm-ss」形式で取得
         try:
-            timestamp = datetime.now().strftime('%Y-%m-%dT%H-%M-%S')
+            timestamp = datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
+            if delta_hour != 0:
+                timestamp = (datetime.now() + timedelta(hours=delta_hour)).strftime("%Y-%m-%dT%H-%M-%S")
             return timestamp
         except Exception as e:
             raise e
@@ -95,6 +97,7 @@ class Util:
         except Exception as e:
             raise e
 
+    @staticmethod
     def get_alphabet_list(num: int) -> list:
         """アルファベットリストを取得する関数"""
         try:
@@ -106,6 +109,19 @@ class Util:
                 else:
                     alphabet_list.append(alphabet[i//26-1] + alphabet[i%26])
             return alphabet_list
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def get_common_files(path_list:list) -> list:
+        try:
+            common_files = []
+            for i in range(len(path_list)):
+                if i == 0:
+                    common_files = set(Util.get_file_name_list(path_list[i], ""))
+                else:
+                    common_files = common_files & set(Util.get_file_name_list(path_list[i], ""))
+            return sorted(list(common_files))
         except Exception as e:
             raise e
 
@@ -140,5 +156,10 @@ if __name__ == "__main__":
         print("FileName(No Ext): ", Util.remove_extension(file_name="sample.csv"))
         # アルファベットリストを取得
         print("Alphabet List: ", Util.get_alphabet_list(50))
+        # 共通ファイルを取得
+        print("Common Files: ", Util.get_common_files(
+            "/home/pi/minelab-agri-platform/minelab-iot-gateway/pcap/minelab-iot-nexmon-1",
+            "/home/pi/minelab-agri-platform/minelab-iot-gateway/pcap/minelab-iot-nexmon-2"
+        ))
     except Exception as e:
         print(e)

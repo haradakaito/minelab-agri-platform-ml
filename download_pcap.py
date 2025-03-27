@@ -11,13 +11,13 @@ if __name__ == '__main__':
         aws_handler = AWSHandler(region_name='ap-northeast-1', bucket_name='minelab-iot-storage')
 
         for field_device in config["FieldDevice"]["Pcap"]:
-            Util.create_path(path=f'{Util.get_root_dir()}/raw-data/pcap-data/{field_device}')
+            Util.create_path(path=f'{Util.get_root_dir()}/data/pcap-data/{field_device}')
             # 指定した時間範囲のオブジェクトをダウンロード
             aws_handler.download_s3_objects(
-                remote_path = f'projects/csi/pcap-data/{field_device}/',                   # S3のプレフィックス
-                local_path  = f'{Util.get_root_dir()}/raw-data/pcap-data/{field_device}/', # ローカルパス
-                start_time  = Util.get_timestamp(delta_hour=-24),                          # 開始時間
-                end_time    = Util.get_timestamp()                                         # 終了時間
+                remote_path = f'projects/csi/pcap-data/{field_device}/',               # S3のプレフィックス
+                local_path  = f'{Util.get_root_dir()}/data/pcap-data/{field_device}/', # ローカルパス
+                start_time  = Util.get_timestamp(delta_hour=-24),                      # 開始時間
+                end_time    = Util.get_timestamp()                                     # 終了時間
             )
 
     except Exception as e:

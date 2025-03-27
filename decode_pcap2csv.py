@@ -59,12 +59,12 @@ if __name__ == '__main__':
 
         # PCAPファイルのデコード
         for field_device in config["FieldDevice"]["Pcap"]:
-            for filename in Util.get_file_name_list(path=f"{Util.get_root_dir()}/raw-data/pcap-data/{field_device}", ext='.pcap'):
+            for filename in Util.get_file_name_list(path=f"{Util.get_root_dir()}/data/pcap-data/{field_device}", ext='.pcap'):
                 # PCAPファイルをCSVファイルに変換
                 decode_pcap2csv(
                     decoder   = importlib.import_module(f"lib.interleaved"),
-                    pcap_path = f"{Util.get_root_dir()}/raw-data/pcap-data/{field_device}",
-                    csv_path  = f"{Util.get_root_dir()}/raw-data/csv-data/{field_device}",
+                    pcap_path = f"{Util.get_root_dir()}/data/pcap-data/{field_device}",
+                    csv_path  = f"{Util.get_root_dir()}/data/csv-data/{field_device}",
                     filename  = filename
                 )
 

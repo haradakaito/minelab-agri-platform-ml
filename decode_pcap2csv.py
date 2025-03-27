@@ -58,13 +58,13 @@ if __name__ == '__main__':
             config = json.load(f)
 
         # PCAPファイルのデコード
-        for field_device in config["FieldDevice"]["Pcap"]:
-            for filename in Util.get_file_name_list(path=f"{Util.get_root_dir()}/data/pcap-data/{field_device}", ext='.pcap'):
+        for all_device in config["AllDevice"]["Pcap"]:
+            for filename in Util.get_file_name_list(path=f"{Util.get_root_dir()}/data/pcap-data/{all_device}", ext='.pcap'):
                 # PCAPファイルをCSVファイルに変換
                 decode_pcap2csv(
                     decoder   = importlib.import_module(f"lib.interleaved"),
-                    pcap_path = f"{Util.get_root_dir()}/data/pcap-data/{field_device}",
-                    csv_path  = f"{Util.get_root_dir()}/data/csv-data/{field_device}",
+                    pcap_path = f"{Util.get_root_dir()}/data/pcap-data/{all_device}",
+                    csv_path  = f"{Util.get_root_dir()}/data/csv-data/{all_device}",
                     filename  = filename
                 )
 

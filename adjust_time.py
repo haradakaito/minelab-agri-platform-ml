@@ -1,10 +1,8 @@
 import json
-import numpy as np
 import pandas as pd
 from tqdm import tqdm
 import sys
 sys.setrecursionlimit(10**6)
-import time
 
 from lib import Util, TimeAdjuster
 
@@ -20,7 +18,7 @@ if __name__ == "__main__":
     common_file = Util.get_common_files(path_list=[f"{Util.get_root_dir()}/data/csv-data/{device}/amp/" for device in config["AllDevice"]["Pcap"]])
 
     # 共通ファイルをループ
-    for file_name in common_file:
+    for file_name in tqdm(common_file):
 
         print(f"ファイル名: {file_name}の受信時刻補正を開始します。")
 

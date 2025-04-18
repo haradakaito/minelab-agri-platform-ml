@@ -14,7 +14,7 @@ if __name__ == "__main__":
     common_file = Util.get_common_files(path_list=[f"{Util.get_root_dir()}/data/adjusted-data/{field_device}/amp/" for field_device in config["AllDevice"]["Pcap"]])
 
     # 各ファイルに対して信号処理を適用
-    for field_device in sorted(config["FieldDevice"]["Pcap"]):
+    for field_device in sorted(config["AllDevice"]["Pcap"]):
         for file_name in tqdm(common_file):
             # ファイルのパスを取得
             file_path = f"{Util.get_root_dir()}/data/adjusted-data/{field_device}/amp/{file_name}"

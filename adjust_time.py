@@ -8,6 +8,7 @@ from lib import Util, TimeAdjuster
 
 # 定数
 alpha = 0.01
+file_type = "amp"
 
 if __name__ == "__main__":
     # 設定ファイルの読み込み
@@ -15,7 +16,7 @@ if __name__ == "__main__":
         config = json.load(f)
 
     # 共通ファイルを取得
-    common_file = Util.get_common_files(path_list=[f"{Util.get_root_dir()}/data/csv-data/{device}/amp/" for device in config["AllDevice"]["Pcap"]])
+    common_file = Util.get_common_files(path_list=[f"{Util.get_root_dir()}/data/csv-data/{device}/{file_type}/" for device in config["AllDevice"]["Pcap"]])
 
     # 共通ファイルをループ
     for file_name in tqdm(common_file):
@@ -25,7 +26,7 @@ if __name__ == "__main__":
         # データフレームを辞書に格納
         df_dict_original = {}
         for device in sorted(config["AllDevice"]["Pcap"]):
-            file_path = f"{Util.get_root_dir()}/data/csv-data/{device}/amp/{file_name}"
+            file_path = f"{Util.get_root_dir()}/data/csv-data/{device}/{file_type}/{file_name}"
             df_dict_original[device] = pd.read_csv(file_path, index_col=0)
 
         # インスタンスを生成
@@ -44,5 +45,5 @@ if __name__ == "__main__":
 
         # データを保存
         for device in sorted(config["AllDevice"]["Pcap"]):
-            Util.create_path(path=f"{Util.get_root_dir()}/data/adjusted-data/{device}/amp")
-            ta.df_dict[device].to_csv(f"{Util.get_root_dir()}/data/adjusted-data/{device}/amp/{file_name}")
+            Util.create_path(path=f"{Util.get_root_dir()}/data/adjusted-data/{device}/{file_type}")
+            ta.df_dict[device].to_csv(f"{Util.get_root_dir()}/data/adjusted-data/{device}/{file_type}/{file_name}")
